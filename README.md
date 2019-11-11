@@ -1,7 +1,8 @@
 # Looper4BitwigScript
 A simple looper script for bitwig
 
-Load script in Setting / Controller<br/>
+Put the files Looper.control.js and TrackHandler.js in a subfolder (with a name like "Looper" for example) in the controller script folder of bitwig<br/>
+Load script in Bitwig Setting Controller (author Solinas)<br/>
 Configure Preferences<br/>
 Create a groupTrack<br/>
 Add multiple audioTrack inside this groupTrack (max 64)<br/>
