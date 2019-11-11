@@ -40,6 +40,7 @@ function TrackHandler (host)
         for(j=0;j < track.clipLauncherSlotBank().getSizeOfBank();j++)
         {
             track.clipLauncherSlotBank().getItemAt(j).isRecording().markInterested();
+            track.clipLauncherSlotBank().getItemAt(j).isPlaying().addValueObserver(doObject(this,isFinishedRecording));
         }
     }
     this.cursorTrack.isPinned().addValueObserver(doObject(this,cursorTrackPinned));
@@ -70,11 +71,10 @@ TrackHandler.prototype.handleMidi = function (status, data1, data2)
                     this.trackbank.getItemAt(this.currentTrack).clipLauncherSlotBank().launch(this.currentScene);
                     if(this.currentTrack >= this.trackbank.getSizeOfBank()-1)
                     {
-                        this.currentScene = mod(++this.currentScene,this.maxScene.getRaw());
+                        this.currentScene = mod(++this.currentScene,this.trackbank.sceneBank().getSizeOfBank());
                     }
                     this.currentTrack = mod(++this.currentTrack,this.trackbank.getSizeOfBank());
                     this.counterRecord++;
-                    armConfig(this.trackbank,this.currentTrack);
                 }
                 else
                 {
@@ -132,6 +132,11 @@ cursorTrackPinned = function(isPinned){
     this.maxScene.getRaw()+" scenes");
 }
 
+isFinishedRecording = function(isFinishedRecording)
+{
+    armConfig(this.trackbank,this.currentTrack);
+}
+
 armConfig = function(trackbank,index)
 {
     for(i=0; i < trackbank.getSizeOfBank(); i++)
@@ -155,7 +160,7 @@ undo = function(obj)
 {
     if(obj.currentTrack == 0)
     {
-        obj.currentScene = mod(--obj.currentScene,obj.maxScene);
+        obj.currentScene = mod(--obj.currentScene,obj.trackbank.sceneBank().getSizeOfBank());
     }
     obj.currentTrack = mod(--obj.currentTrack,obj.trackbank.getSizeOfBank());
     obj.trackbank.getItemAt(obj.currentTrack).clipLauncherSlotBank().deleteClip(obj.currentScene);
