@@ -134,16 +134,22 @@ cursorTrackPinned = function(isPinned){
 
 isFinishedRecording = function(isFinishedRecording)
 {
-    armConfig(this.trackbank,this.currentTrack);
+    if(isFinishedRecording) armConfig(this.trackbank,this.currentTrack);
 }
 
 armConfig = function(trackbank,index)
 {
+    if(!trackbank.getItemAt(index).arm().get())
+    {
+        trackbank.getItemAt(index).arm().set(true);
+    }
     for(i=0; i < trackbank.getSizeOfBank(); i++)
     {
-        trackbank.getItemAt(i).arm().set(false);
+        if(i != index)
+        {
+            trackbank.getItemAt(i).arm().set(false);
+        }
     }
-    trackbank.getItemAt(index).arm().set(true);
 }
 
 setVolumes = function(trackbank,currentTrack,arrayVolumeTrack)
